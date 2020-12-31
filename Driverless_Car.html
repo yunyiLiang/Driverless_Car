@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    maxX:<input type="text" id="maxX" value="4">
+    maxY:<input type="text" id="maxY" value="4">
+    <p>plese input the command, for example: rotate or 1, 2, 3, 4...</p>
+    <input type="text" name="command" id="command">
+    <input type="button" value="button" onclick="btn()" />
+
+    <script>
+        let minX = 1;
+        let maxX = document.querySelector('#maxX').value;
+        let minY = 1;
+        let maxY = document.querySelector('#maxY').value;
+        class Car {
+            constructor(x, y, orientation) {
+                this.x = x;
+                this.y = y;
+                this.orientation = orientation;
+            }
+
+            toString() {
+                return `(x: ${this.x}, y: ${this.y}, orientation: ${this.orientation})`;
+            }
+
+            getPositionX() {
+                return this.x;
+            }
+
+            getPositionY() {
+                return this.y;
+            }
+
+            getOrientation() {
+                return this.orientation;
+            }
+
+            move(command) {
+                let reg = /^[0-9]$/;
+                if (command !== 'rotate' && !reg.test(parseInt(command)) && command !== '') {
+                    throw new Error('Incorrect command entry');
+                }
+                if (command === 'rotate') {
+                    switch (this.orientation) {
+                        case 'N':
+                            this.orientation = 'E';
+                            break;
+                        case 'E':
+                            this.orientation = 'S';
+                            break;
+                        case 'S':
+                            this.orientation = 'W';
+                            break;
+                        case 'W':
+                            this.orientation = 'N';
+                            break;
+                    }
+                } else {
+                    let moveNumber = command === '' ? 0 : parseInt(command);
+                    switch (this.orientation) {
+                        case 'N':
+                            this.y += moveNumber;
+                            break;
+                        case 'E':
+                            this.x += moveNumber;
+                            break;
+                        case 'S':
+                            this.y -= moveNumber;
+                            break;
+                        case 'W':
+                            this.x -= moveNumber;
+                            break;
+                        default:
+                            this.x += 0;
+                            this.y += 0;
+                    }
+                }
+                if (this.x < minX
+                    || this.x > maxX
+                    || this.y < minY
+                    || this.y > maxY) {
+                    throw new Error('The car hit the wall');
+                }
+            }
+        }
+        let car = new Car(1, 1, 'N');
+        function btn() {
+            let command = document.querySelector('#command').value;
+            console.log(command);
+            car.move(command);
+            console.log(car);
+        }; btn();
+    </script>
+</body>
+
+</html>
